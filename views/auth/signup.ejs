@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign up • Ajo Thrift</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("../partials/nav", { user }) %>
+
+      <main class="auth-shell">
+        <section class="auth-card" aria-label="Signup form">
+          <header>
+            <h1>Create your account</h1>
+            <p class="muted">Join a plan, track requests, and keep your details in one place.</p>
+          </header>
+
+          <% if (error) { %>
+            <p class="form-error"><%= error %></p>
+          <% } %>
+
+          <form class="auth-form" method="post" action="/auth/signup">
+            <input type="hidden" name="next" value="<%= next %>" />
+            <label>
+              Full name
+              <input name="name" autocomplete="name" required />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" autocomplete="new-password" minlength="8" required />
+            </label>
+            <button type="submit">Sign up</button>
+          </form>
+
+          <p class="muted auth-foot">
+            Already have an account? <a class="admin-link" href="/auth/login?next=<%= encodeURIComponent(next) %>">Log in</a>
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access denied • Ajo Thrift</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("../partials/nav", { user }) %>
+      <main class="auth-shell">
+        <section class="auth-card">
+          <header>
+            <h1>Access denied</h1>
+            <p class="muted"><%= message || "You do not have permission to view this page." %></p>
+          </header>
+          <a class="btn primary" href="/">Back home</a>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
+

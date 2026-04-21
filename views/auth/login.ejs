@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in • Ajo Thrift</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("../partials/nav", { user }) %>
+
+      <main class="auth-shell">
+        <section class="auth-card" aria-label="Login form">
+          <header>
+            <h1>Welcome back</h1>
+            <p class="muted">Log in to manage your Ajo requests and see admin tools (if enabled).</p>
+          </header>
+
+          <% if (error) { %>
+            <p class="form-error"><%= error %></p>
+          <% } %>
+
+          <form class="auth-form" method="post" action="/auth/login">
+            <input type="hidden" name="next" value="<%= next %>" />
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" autocomplete="current-password" required />
+            </label>
+            <button type="submit">Log in</button>
+          </form>
+
+          <p class="muted auth-foot">
+            New here? <a class="admin-link" href="/auth/signup?next=<%= encodeURIComponent(next) %>">Create an account</a>
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
+

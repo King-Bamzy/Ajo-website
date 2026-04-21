@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Ajo • Ajo Thrift</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("partials/nav", { user }) %>
+
+      <header class="hero admin-hero">
+        <div>
+          <p class="eyebrow">My Ajo</p>
+          <h1>Your join requests and schedules.</h1>
+          <p>Track what you have submitted and the current status from the admin team.</p>
+        </div>
+        <div class="hero-panel">
+          <p class="hero-panel-title">Status guide</p>
+          <ul>
+            <li><strong>pending</strong>: admin review in progress</li>
+            <li><strong>accepted</strong>: approved to join the circle</li>
+            <li><strong>scheduled</strong>: pickup/delivery date set</li>
+            <li><strong>delivered</strong>: completed round</li>
+          </ul>
+        </div>
+      </header>
+
+      <main>
+        <section class="items-panel">
+          <header>
+            <h2>Requests</h2>
+            <p>These are the requests linked to your account (<%= user.email %>).</p>
+          </header>
+
+          <% if (!requests.length) { %>
+            <p class="muted">No requests yet. Pick a plan on the home page to submit one.</p>
+            <a class="btn primary" href="/">Browse plans</a>
+          <% } else { %>
+            <div class="admin-grid">
+              <% requests.forEach((request) => { %>
+                <article class="admin-card">
+                  <div>
+                    <h3><%= request.plan %></h3>
+                    <p class="muted">Name: <strong><%= request.memberName %></strong></p>
+                    <p class="muted">Contribution: ₦<%= Number(request.contribution || 0).toLocaleString() %></p>
+                    <% if (request.scheduledFor) { %>
+                      <p class="muted">Next contribution date: <%= new Date(request.scheduledFor).toLocaleDateString() %></p>
+                    <% } %>
+                    <% if (request.notes) { %>
+                      <p class="muted">Notes: <%= request.notes %></p>
+                    <% } %>
+                    <p class="status-chip status-<%= request.status %>">Status: <%= request.status %></p>
+                  </div>
+                </article>
+              <% }) %>
+            </div>
+          <% } %>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
+

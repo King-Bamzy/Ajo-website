@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajo Admin Console</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("partials/nav", { user }) %>
+
+      <header class="hero admin-hero">
+        <div>
+          <p class="eyebrow">Admin console</p>
+          <h1>Run the Ajo operations dashboard.</h1>
+          <p>
+            Review join requests, schedule pickup windows, mark deliveries, manage featured thrift
+            drops, and control user access.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <p class="hero-panel-title">Quick stats</p>
+          <p class="hero-panel-copy">Track activity in one glance.</p>
+          <ul>
+            <li>Total requests: <strong><%= requests.length %></strong></li>
+            <li>Pending: <strong><%= requests.filter(r => r.status === "pending").length %></strong></li>
+            <li>Scheduled: <strong><%= requests.filter(r => r.status === "scheduled").length %></strong></li>
+            <li>Users: <strong><%= users.length %></strong></li>
+          </ul>
+        </div>
+      </header>
+
+      <main>
+        <section class="items-panel">
+          <header>
+            <h2>Join requests</h2>
+            <p>Move members through approval, scheduling, and delivery.</p>
+            <div class="admin-toolbar" aria-label="Request tools">
+              <input class="admin-search" type="search" placeholder="Search name, email, phone..." data-admin-search="collections" />
+              <select class="admin-filter" data-admin-filter="collections">
+                <option value="">All statuses</option>
+                <option value="pending">pending</option>
+                <option value="accepted">accepted</option>
+                <option value="rejected">rejected</option>
+                <option value="scheduled">scheduled</option>
+                <option value="delivered">delivered</option>
+              </select>
+              <button class="btn ghost" type="button" data-export="collections">Export CSV</button>
+            </div>
+          </header>
+
+          <% if (!requests.length) { %>
+            <p class="muted">No requests yet. Once members apply, they will appear here.</p>
+          <% } else { %>
+            <div class="admin-grid">
+              <% requests.forEach((request) => { %>
+                <article class="admin-card" data-collection-id="<%= request._id %>">
+                  <div>
+                    <h3><%= request.memberName %></h3>
+                    <% if (request.memberEmail) { %>
+                      <p class="muted">Email: <%= request.memberEmail %></p>
+                    <% } %>
+                    <p class="muted">Plan: <strong><%= request.plan %></strong></p>
+                    <p class="muted">Contribution: ₦<%= Number(request.contribution || 0).toLocaleString() %></p>
+                    <p class="muted">Phone: <%= request.phone %></p>
+                    <% if (request.notes) { %>
+                      <p class="muted">Notes: <%= request.notes %></p>
+                    <% } %>
+                    <p class="status-chip status-<%= request.status %>" data-status-chip="true">
+                      Status: <%= request.status %>
+                    </p>
+                  </div>
+
+                  <div class="admin-actions">
+                    <button type="button" class="btn primary" data-action="set-status" data-status="accepted">
+                      Accept
+                    </button>
+                    <button type="button" class="btn ghost" data-action="set-status" data-status="rejected">
+                      Reject
+                    </button>
+                    <button type="button" class="btn ghost" data-action="set-status" data-status="delivered">
+                      Mark delivered
+                    </button>
+                    <button type="button" class="btn ghost danger" data-action="delete-request">
+                      Delete
+                    </button>
+                  </div>
+
+                  <form class="admin-inline" data-action="schedule-form">
+                    <label class="admin-inline-field">
+                      Next contribution date
+                      <input name="scheduledFor" type="date" value="<%= request.scheduledFor ? new Date(request.scheduledFor).toISOString().slice(0, 10) : "" %>" />
+                    </label>
+                    <button class="btn ghost" type="submit">Save schedule</button>
+                  </form>
+                </article>
+              <% }) %>
+            </div>
+          <% } %>
+        </section>
+
+        <section class="items-panel">
+          <header>
+            <h2>Featured drops</h2>
+            <p>Toggle availability and keep pricing realistic.</p>
+            <div class="admin-toolbar" aria-label="Item tools">
+              <input class="admin-search" type="search" placeholder="Search item name, category..." data-admin-search="items" />
+            </div>
+          </header>
+
+          <% if (!items.length) { %>
+            <p class="muted">No items seeded yet.</p>
+          <% } else { %>
+            <div class="admin-grid">
+              <% items.forEach((item) => { %>
+                <article class="admin-card" data-item-id="<%= item._id %>">
+                  <div>
+                    <h3><%= item.name %></h3>
+                    <p class="muted"><%= item.category %> • <%= item.thriftHouse %></p>
+                    <p class="muted">Price: ₦<%= Number(item.price || 0).toLocaleString() %></p>
+                    <p class="status-chip <%= item.available ? "status-accepted" : "status-rejected" %>" data-available-chip="true">
+                      <%= item.available ? "Available" : "Hidden" %>
+                    </p>
+                  </div>
+
+                  <form class="admin-inline" data-action="item-form">
+                    <label class="admin-inline-field">
+                      Price (₦)
+                      <input name="price" type="number" min="0" value="<%= Number(item.price || 0) %>" />
+                    </label>
+                    <label class="admin-inline-field checkbox">
+                      <span>Available</span>
+                      <input name="available" type="checkbox" <%= item.available ? "checked" : "" %> />
+                    </label>
+                    <button class="btn ghost" type="submit">Save</button>
+                  </form>
+                </article>
+              <% }) %>
+            </div>
+          <% } %>
+        </section>
+
+        <section class="items-panel">
+          <header>
+            <h2>Users</h2>
+            <p>Promote admins and disable accounts when necessary.</p>
+            <div class="admin-toolbar" aria-label="User tools">
+              <input class="admin-search" type="search" placeholder="Search name or email..." data-admin-search="users" />
+              <select class="admin-filter" data-admin-filter="users">
+                <option value="">All roles</option>
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+              </select>
+            </div>
+          </header>
+
+          <% if (!users.length) { %>
+            <p class="muted">No users yet.</p>
+          <% } else { %>
+            <div class="admin-grid">
+              <% users.forEach((u) => { %>
+                <article class="admin-card" data-user-id="<%= u._id %>">
+                  <div>
+                    <h3><%= u.name %></h3>
+                    <p class="muted"><%= u.email %></p>
+                    <p class="status-chip <%= u.role === "admin" ? "status-accepted" : "status-pending" %>" data-role-chip="true">
+                      Role: <%= u.role %>
+                    </p>
+                    <p class="status-chip <%= u.disabled ? "status-rejected" : "status-accepted" %>" data-disabled-chip="true">
+                      <%= u.disabled ? "Disabled" : "Active" %>
+                    </p>
+                  </div>
+
+                  <form class="admin-inline" data-action="user-form">
+                    <label class="admin-inline-field">
+                      Role
+                      <select name="role">
+                        <option value="user" <%= u.role === "user" ? "selected" : "" %>>user</option>
+                        <option value="admin" <%= u.role === "admin" ? "selected" : "" %>>admin</option>
+                      </select>
+                    </label>
+                    <label class="admin-inline-field checkbox">
+                      <span>Disabled</span>
+                      <input name="disabled" type="checkbox" <%= u.disabled ? "checked" : "" %> />
+                    </label>
+                    <button class="btn ghost" type="submit">Save</button>
+                  </form>
+                </article>
+              <% }) %>
+            </div>
+          <% } %>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/admin.js" defer></script>
+  </body>
+</html>
