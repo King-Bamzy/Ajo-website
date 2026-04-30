@@ -1,30 +1,39 @@
-﻿const ajoPlans = [
+const ajoPlans = [
   {
-    name: "Starter Ajo",
-    contribution: 50000,
-    frequency: "Monthly",
-    duration: "10 months",
-    totalPayout: 500000,
-    description: "Starter savings circle for members targeting a 500k payout after 10 months.",
-    benefits: ["Priority thrift booking", "Monthly style curation"]
+    name: "Daily Saver",
+    contribution: 1000,
+    frequency: "Daily collection",
+    duration: "Flexible",
+    totalPayout: 30000,
+    description: "A simple daily amount for members who want their representative to collect small, steady savings.",
+    benefits: ["Easy to maintain daily streaks", "Clear view of paid and missed days"]
   },
   {
-    name: "Basic Ajo",
-    contribution: 200000,
-    frequency: "Monthly",
-    duration: "10 months",
-    totalPayout: 2000000,
-    description: "For serious collectors who want a 2 million payout at the end of the cycle.",
-    benefits: ["Dedicated thrift concierge", "Early access to drops"]
+    name: "Weekly Saver",
+    contribution: 5000,
+    frequency: "Weekly collection",
+    duration: "Flexible",
+    totalPayout: 20000,
+    description: "For customers who prefer fewer collection visits while still building savings consistently.",
+    benefits: ["Planned weekly collections", "Good for salary or market-cycle savers"]
   },
   {
-    name: "Advanced Ajo",
-    contribution: 500000,
-    frequency: "Monthly",
-    duration: "10 months",
-    totalPayout: 5000000,
-    description: "Premium savings circle with a 5 million payout after 10 months.",
-    benefits: ["Private sourcing trips", "VIP delivery windows"]
+    name: "Monthly Saver",
+    contribution: 20000,
+    frequency: "Monthly collection",
+    duration: "Flexible",
+    totalPayout: 200000,
+    description: "A higher monthly plan for customers who want to save in larger scheduled amounts.",
+    benefits: ["Monthly balance check-ins", "Easier planning for bigger targets"]
+  },
+  {
+    name: "Multiple Goals Plan",
+    contribution: 1000,
+    frequency: "Custom collection",
+    duration: "Flexible",
+    totalPayout: 50000,
+    description: "Use one account to run more than one savings target without opening multiple customer accounts.",
+    benefits: ["Separate goals under one profile", "Representative can help structure the targets"]
   }
 ];
 

@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color: #131112;
   font-family: "Inter", "Space Grotesk", system-ui, sans-serif;
   background-color: #0b0b0f;
@@ -38,6 +38,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
   padding: 1rem 1.25rem;
   border-radius: 1.25rem;
   background: rgba(255, 255, 255, 0.03);
@@ -50,11 +51,12 @@ body {
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.6rem;
   text-decoration: none;
   color: #fff;
   min-width: 0;
+  flex: 1 1 200px;
 }
 
 .brand-mark {
@@ -72,10 +74,16 @@ body {
 }
 
 .brand-name {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.1rem;
   font-weight: 650;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 0.95;
+  white-space: normal;
+}
+
+.brand-name span {
+  display: block;
 }
 
 .nav-actions {
@@ -84,6 +92,7 @@ body {
   gap: 0.75rem;
   flex-wrap: wrap;
   justify-content: flex-end;
+  flex: 0 1 auto;
 }
 
 .nav-user {
@@ -108,6 +117,7 @@ body {
 
 .hero h1 {
   font-size: clamp(2.5rem, 2vw + 2rem, 3.4rem);
+  margin-top: 0;
   margin-bottom: 1rem;
 }
 
@@ -153,11 +163,28 @@ body {
   border: 1px solid var(--border);
 }
 
+.hero-panel-title {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent-2);
+}
+
 .hero-panel ul {
   padding-left: 1rem;
   color: var(--muted);
   margin: 1rem 0 0;
   list-style-position: inside;
+}
+
+.steps-list {
+  margin: 1rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--muted);
+  display: grid;
+  gap: 0.8rem;
+  line-height: 1.55;
 }
 
 .eyebrow {
@@ -200,6 +227,69 @@ main {
   color: var(--muted);
 }
 
+.trust-banner,
+.feature-section,
+.access-card {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.trust-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 2rem;
+  padding: 1.75rem 2rem;
+  border-radius: 1.25rem;
+  align-items: center;
+}
+
+.trust-banner h2,
+.feature-section h2,
+.access-card h2,
+.faq h2 {
+  margin: 0;
+}
+
+.feature-section {
+  padding: 2rem;
+  border-radius: 1.25rem;
+}
+
+.feature-grid,
+.access-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.feature-grid {
+  margin-top: 1rem;
+}
+
+.feature-card,
+.access-card {
+  padding: 1.4rem;
+  border-radius: 1rem;
+}
+
+.feature-card h3,
+.access-card h2 {
+  margin-top: 0;
+}
+
+.feature-card p,
+.access-card p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
 .plans-grid header h2,
 .items-panel header h2,
 .collection-section h2,
@@ -217,12 +307,11 @@ main {
 .plans-row {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
 .plan-card {
-  cursor: pointer;
   position: relative;
   padding: 1.5rem;
   border-radius: 1rem;
@@ -259,10 +348,20 @@ main {
   font-weight: 700;
 }
 
+.plan-price-note {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
 .plan-card ul {
   margin: 0;
   padding-left: 1rem;
   color: var(--muted);
+}
+
+.account-plan-card {
+  cursor: default;
 }
 
 .items-panel {
@@ -720,6 +819,14 @@ main {
   margin-top: 1rem;
 }
 
+.info-list {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--muted);
+  display: grid;
+  gap: 0.65rem;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -868,8 +975,17 @@ body.modal-open {
     padding: 0.85rem 1rem;
   }
 
+  .brand {
+    flex-basis: 100%;
+  }
+
   .nav-user {
     display: none;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .hero-actions {

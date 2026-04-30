@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Ajo • Ajo Thrift</title>
+    <title>My Savings - Ajo Thrift Collection</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
@@ -12,41 +12,102 @@
 
       <header class="hero admin-hero">
         <div>
-          <p class="eyebrow">My Ajo</p>
-          <h1>Your join requests and schedules.</h1>
-          <p>Track what you have submitted and the current status from the admin team.</p>
+          <p class="eyebrow">My savings</p>
+          <h1>Set up your savings plan and follow your account from one place.</h1>
+          <p>Your representative can still handle collections physically while this dashboard keeps your plan details and schedule visible.</p>
         </div>
         <div class="hero-panel">
-          <p class="hero-panel-title">Status guide</p>
+          <p class="hero-panel-title">How this dashboard helps</p>
           <ul>
-            <li><strong>pending</strong>: admin review in progress</li>
-            <li><strong>accepted</strong>: approved to join the circle</li>
-            <li><strong>scheduled</strong>: pickup/delivery date set</li>
-            <li><strong>delivered</strong>: completed round</li>
+            <li><strong>Create one or many plans</strong> under the same account</li>
+            <li><strong>See the next collection date</strong> after it is confirmed</li>
+            <li><strong>Review your request status</strong> without waiting for the next visit</li>
+            <li><strong>Prepare for payment history tracking</strong> as collections are recorded</li>
           </ul>
         </div>
       </header>
 
       <main>
+        <section aria-label="Savings summary" class="stats-grid">
+          <article>
+            <p class="label">Active plans</p>
+            <strong><%= summary.activePlans %></strong>
+            <p>Plans on your account that are not rejected.</p>
+          </article>
+          <article>
+            <p class="label">Scheduled savings</p>
+            <strong>₦<%= summary.totalCommitted.toLocaleString() %></strong>
+            <p>Total amount currently tied to your submitted plans.</p>
+          </article>
+          <article>
+            <p class="label">Next collection</p>
+            <strong><%= summary.nextCollection ? new Date(summary.nextCollection.scheduledFor).toLocaleDateString() : "Waiting" %></strong>
+            <p><%= summary.nextCollection ? summary.nextCollection.plan : "Your representative will confirm the date." %></p>
+          </article>
+        </section>
+
+        <section class="collection-section">
+          <div>
+            <h2>Start a savings plan</h2>
+            <p>Create a single savings plan or use one account for multiple savings goals.</p>
+            <p class="subtle">
+              After you submit this, your representative or the support team can confirm the collection schedule with you.
+            </p>
+            <p id="collection-status" class="status-note" aria-live="polite"></p>
+          </div>
+
+          <form id="collection-form" class="collection-form">
+            <label>
+              Full name
+              <input name="memberName" placeholder="Sade Amaka" value="<%= user ? user.name : "" %>" required />
+            </label>
+            <label>
+              Phone number
+              <input name="phone" type="tel" placeholder="+234 801 234 5678" required />
+            </label>
+            <label>
+              Savings plan
+              <select name="plan" required>
+                <% planOptions.forEach((plan) => { %>
+                  <option value="<%= plan.name %>"><%= plan.name %> - <%= plan.frequency %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label>
+              Amount per collection (₦)
+              <input name="contribution" type="number" min="1" required />
+            </label>
+            <label>
+              Preferred start date
+              <input name="scheduledFor" type="date" />
+            </label>
+            <label>
+              Notes
+              <textarea name="notes" rows="3" placeholder="Example: one daily plan for shop restock and one weekly plan for rent"></textarea>
+            </label>
+            <button type="submit">Save plan request</button>
+          </form>
+        </section>
+
         <section class="items-panel">
           <header>
-            <h2>Requests</h2>
-            <p>These are the requests linked to your account (<%= user.email %>).</p>
+            <h2>My submitted plans</h2>
+            <p>These are the savings plans linked to your account (<%= user.email %>).</p>
           </header>
 
           <% if (!requests.length) { %>
-            <p class="muted">No requests yet. Pick a plan on the home page to submit one.</p>
-            <a class="btn primary" href="/">Browse plans</a>
+            <p class="muted">No savings plans yet. Use the form above to create your first one.</p>
           <% } else { %>
-            <div class="admin-grid">
+            <div class="plans-row">
               <% requests.forEach((request) => { %>
-                <article class="admin-card">
+                <article class="plan-card account-plan-card">
                   <div>
                     <h3><%= request.plan %></h3>
-                    <p class="muted">Name: <strong><%= request.memberName %></strong></p>
-                    <p class="muted">Contribution: ₦<%= Number(request.contribution || 0).toLocaleString() %></p>
+                    <p class="plan-price">₦<%= Number(request.contribution || 0).toLocaleString() %> <span class="plan-price-note">per collection</span></p>
+                    <p class="muted">Account name: <strong><%= request.memberName %></strong></p>
+                    <p class="muted">Phone: <%= request.phone || "Not added yet" %></p>
                     <% if (request.scheduledFor) { %>
-                      <p class="muted">Next contribution date: <%= new Date(request.scheduledFor).toLocaleDateString() %></p>
+                      <p class="muted">Next collection date: <%= new Date(request.scheduledFor).toLocaleDateString() %></p>
                     <% } %>
                     <% if (request.notes) { %>
                       <p class="muted">Notes: <%= request.notes %></p>
@@ -58,8 +119,22 @@
             </div>
           <% } %>
         </section>
+
+        <section class="trust-banner">
+          <div>
+            <p class="eyebrow">Payment tracking</p>
+            <h2>Your balance and payment-day calendar belong here as collections are recorded.</h2>
+          </div>
+          <p class="muted">
+            This dashboard is now ready for account access and plan setup. The next step is recording each payment day so paid and missed dates can be colored accurately.
+          </p>
+        </section>
       </main>
     </div>
+
+    <script>
+      window.__AJO_PLANS__ = <%- JSON.stringify(planOptions) %>;
+    </script>
+    <script src="/js/main.js" defer></script>
   </body>
 </html>
-

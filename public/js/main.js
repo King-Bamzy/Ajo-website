@@ -136,11 +136,14 @@ document.querySelectorAll("[data-open-apply='true']").forEach((el) => {
 });
 
 document.querySelectorAll(".plan-card").forEach((card) => {
+  if (!card.dataset.plan) return;
+
   card.addEventListener("click", (event) => {
     const target = event.target;
     if (target && target.closest && target.closest("[data-open-apply='true']")) return;
     openApplyModal(card.dataset.plan);
   });
+
   card.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -186,7 +189,7 @@ function bindForm(form, statusEl) {
 
     if (statusEl) {
       statusEl.classList.remove("success");
-      statusEl.textContent = "Sending your application...";
+      statusEl.textContent = "Saving your request...";
     }
 
     const primaryButton = form.querySelector("button[type='submit']");
@@ -203,15 +206,15 @@ function bindForm(form, statusEl) {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data.message || "Unable to submit application");
+        throw new Error(data.message || "Unable to save request");
       }
 
       if (statusEl) {
         statusEl.classList.add("success");
-        statusEl.textContent = `Application recorded for ${data.memberName || payload.memberName} (${data.plan || payload.plan}).`;
+        statusEl.textContent = `Request saved for ${data.memberName || payload.memberName} (${data.plan || payload.plan}).`;
       }
 
-      toast("Application sent", "Admin will review and confirm your schedule via WhatsApp.", "success");
+      toast("Request saved", "The team can now review and confirm the collection schedule.", "success");
 
       if (form === modalForm) {
         window.setTimeout(() => closeApplyModal(), 650);
@@ -222,9 +225,9 @@ function bindForm(form, statusEl) {
     } catch (error) {
       if (statusEl) {
         statusEl.classList.remove("success");
-        statusEl.textContent = error.message || "Failed to submit the form.";
+        statusEl.textContent = error.message || "Failed to save the form.";
       }
-      toast("Something went wrong", error.message || "Failed to submit.", "error");
+      toast("Something went wrong", error.message || "Failed to save request.", "error");
     } finally {
       form.querySelectorAll("button, input, select, textarea").forEach((el) => (el.disabled = false));
       if (primaryButton) primaryButton.removeAttribute("aria-busy");

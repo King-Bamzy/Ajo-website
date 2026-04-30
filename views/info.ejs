@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <%- include("partials/nav", { user }) %>
+
+      <header class="hero admin-hero">
+        <div>
+          <p class="eyebrow"><%= eyebrow %></p>
+          <h1><%= heading %></h1>
+          <p><%= intro %></p>
+        </div>
+        <div class="hero-panel">
+          <p class="hero-panel-title"><%= panel.title %></p>
+          <p class="muted"><%= panel.copy %></p>
+          <ul class="info-list">
+            <% panel.items.forEach((item) => { %>
+              <li><%= item %></li>
+            <% }) %>
+          </ul>
+        </div>
+      </header>
+
+      <main>
+        <section class="feature-section">
+          <div class="feature-grid">
+            <% sections.forEach((section) => { %>
+              <article class="feature-card">
+                <h3><%= section.title %></h3>
+                <p><%= section.body %></p>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+
+        <section class="trust-banner">
+          <div>
+            <p class="eyebrow">Need another page?</p>
+            <h2>Go back to your account or return home.</h2>
+          </div>
+          <div class="link-row">
+            <a class="btn ghost" href="/">Home</a>
+            <% if (user) { %>
+              <a class="btn primary" href="/account">My savings</a>
+            <% } else { %>
+              <a class="btn primary" href="/auth/login?next=%2Faccount">Log in</a>
+            <% } %>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

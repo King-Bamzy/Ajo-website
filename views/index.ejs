@@ -1,245 +1,111 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ajo Thrift Collective</title>
+    <title>Ajo Thrift Collection</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <div class="app-shell">
       <%- include("partials/nav", { user }) %>
+
       <header class="hero">
-        <div>
-          <p class="eyebrow">Ajo thrift collective</p>
-          <h1>Invest in curated thrift drops, one contribution at a time.</h1>
+        <div class="hero-copy">
+          <p class="eyebrow">Representative-assisted thrift savings</p>
+          <h1>Track your thrift savings online while collections still happen in person.</h1>
           <p>
-            Ajo is a Lagos-based collective that banks rotational thrift contributions, sources the
-            best preloved garments, and delivers them with storytelling. Every plan unlocks curated
-            drops, styling support, and community celebrations.
+            Your representative can still introduce the service, collect money physically, and keep
+            the relationship customers already trust. The website is here to reduce paper work,
+            speed things up, and make each account easier to follow.
           </p>
           <div class="hero-actions">
-            <a class="btn primary" href="#plans">Join a plan</a>
-            <button class="btn ghost" type="button" data-open-apply="true">Apply in one tap</button>
+            <% if (user) { %>
+              <a class="btn primary" href="/account">Open my savings</a>
+              <a class="btn ghost" href="/support">Get support</a>
+            <% } else { %>
+              <a class="btn primary" href="/auth/signup?next=%2Faccount">Create account</a>
+              <a class="btn ghost" href="/auth/login?next=%2Faccount">Log in</a>
+            <% } %>
           </div>
         </div>
+
         <div class="hero-panel">
-          <p class="hero-panel-title">Current drop</p>
-          <p class="hero-panel-copy">
-            Kente jackets, denim reworks, and statement accessories are curated for the next
-            delivery wave across Mainland Lagos.
-          </p>
-          <ul>
-            <li>Geo deliveries across Lagos + Ibadan</li>
-            <li>Community styling call every Thursday</li>
-            <li>Flexible pickup from partner hubs</li>
-          </ul>
+          <p class="hero-panel-title">What happens after sign up</p>
+          <ol class="steps-list">
+            <% steps.forEach((step) => { %>
+              <li><%= step %></li>
+            <% }) %>
+          </ol>
         </div>
       </header>
 
       <main>
-        <section aria-label="Ajo stats" class="stats-grid">
-          <article>
-            <p class="label">Total thrift value</p>
-            <strong>₦<%= savedValue.toLocaleString() %></strong>
-            <p>Items curated for the collective this season.</p>
-          </article>
-          <article>
-            <p class="label">Featured drops</p>
-            <strong><%= items.length %></strong>
-            <p>Fresh thrift finds waiting for plan pickers.</p>
-          </article>
-          <article>
-            <p class="label">Collective rounds</p>
-            <strong>4</strong>
-            <p>Rotating savings circles close monthly.</p>
-          </article>
-        </section>
-
-        <section id="plans" class="plans-grid">
-          <header>
-            <h2>Choose your Ajo plan</h2>
-            <p>Monthly contributions build toward your payout after 10 months.</p>
-          </header>
-          <div class="plans-row">
-            <% plans.forEach((plan, index) => { %>
-              <article
-                class="plan-card<%= index === 1 ? " featured" : "" %>"
-                data-plan="<%= plan.name %>"
-                tabindex="0"
-                role="button"
-                aria-label="Apply for <%= plan.name %>"
-              >
-                <div class="plan-header">
-                  <p class="plan-frequency"><%= plan.frequency %></p>
-                  <h3><%= plan.name %></h3>
-                </div>
-                <p class="plan-price">₦<%= plan.contribution.toLocaleString() %> / month</p>
-                <p class="plan-duration"><%= plan.duration %> • Target ₦<%= plan.totalPayout.toLocaleString() %></p>
-                <p class="plan-description"><%= plan.description %></p>
-                <ul>
-                  <% plan.benefits.forEach((benefit) => { %>
-                    <li><%= benefit %></li>
-                  <% }) %>
-                </ul>
-                <button class="btn ghost plan-cta" type="button" data-open-apply="true" data-plan="<%= plan.name %>">
-                  Apply for this plan
-                </button>
-              </article>
-            <% }); %>
-          </div>
-        </section>
-
-        <section class="items-panel">
-          <header>
-            <h2>Featured thrift drops</h2>
-            <p>Every contribution powers the rescuing, cleaning, and storytelling of these pieces.</p>
-          </header>
-          <div class="items-grid">
-            <% items.forEach((item) => { %>
-              <article class="item-card">
-                <div
-                  class="item-media"
-                  style="background-image: url('<%= item.image %>');"
-                  aria-label="<%= item.name %>"
-                ></div>
-                <div class="item-content">
-                  <div class="item-cat"><%= item.category %></div>
-                  <h3><%= item.name %></h3>
-                  <p class="item-description"><%= item.description %></p>
-                  <div class="item-facts">
-                    <% if (item.condition) { %>
-                      <span>Condition: <%= item.condition %></span>
-                    <% } %>
-                    <% if (item.size) { %>
-                      <span>Size: <%= item.size %></span>
-                    <% } %>
-                    <% if (item.color) { %>
-                      <span>Color: <%= item.color %></span>
-                    <% } %>
-                  </div>
-                  <% if (item.story) { %>
-                    <p class="item-story"><%= item.story %></p>
-                  <% } %>
-                  <div class="item-meta">
-                    <span><%= item.thriftHouse %></span>
-                    <span>₦<%= Number(item.price || 0).toLocaleString() %></span>
-                  </div>
-                  <% if (item.tags && item.tags.length) { %>
-                    <div class="item-tags">
-                      <% item.tags.forEach((tag) => { %>
-                        <span><%= tag %></span>
-                      <% }) %>
-                    </div>
-                  <% } %>
-                </div>
-              </article>
-            <% }); %>
-          </div>
-        </section>
-
-        <section id="collections" class="collection-section">
+        <section class="trust-banner">
           <div>
-            <h2>Apply for Ajo</h2>
-            <p>
-              Submit your details, pick a plan, and the Ajo crew will confirm your next contribution
-              and pickup window via WhatsApp.
-            </p>
-            <p class="subtle">
-              This application writes directly to the Ajo backend so we can plan the delivery routes.
-            </p>
-            <div class="collection-cta">
-              <button class="btn primary" type="button" data-open-apply="true">Apply for Ajo</button>
-              <% if (!user) { %>
-                <a class="btn ghost" href="/auth/login?next=/">Log in to track</a>
-              <% } else { %>
-                <a class="btn ghost" href="/account">View my requests</a>
-              <% } %>
-            </div>
-            <p id="collection-status" class="status-note" aria-live="polite"></p>
-            <% if (user && user.role === "admin") { %>
-              <p class="muted">
-                Admin tools: <a href="/admin" class="admin-link">Open dashboard</a>
-              </p>
-            <% } %>
+            <p class="eyebrow">Built for physical collection</p>
+            <h2>The website supports the representative. It does not replace them.</h2>
           </div>
-          <details class="inline-form">
-            <summary>Open inline application form</summary>
-            <form id="collection-form" class="collection-form">
-              <label>
-                Full name
-                <input name="memberName" placeholder="Sade Amaka" value="<%= user ? user.name : "" %>" required />
-              </label>
-              <label>
-                Phone number
-                <input name="phone" type="tel" placeholder="+234 801 234 5678" required />
-              </label>
-              <label>
-                Email (optional)
-                <input name="memberEmail" type="email" placeholder="you@example.com" value="<%= user ? user.email : "" %>" />
-              </label>
-              <label>
-                Ajo plan
-                <select name="plan" required>
-                  <% plans.forEach((plan) => { %>
-                    <option value="<%= plan.name %>"><%= plan.name %></option>
-                  <% }); %>
-                </select>
-              </label>
-              <label>
-                Monthly contribution (₦)
-                <input name="contribution" type="number" min="1" required />
-              </label>
-              <label>
-                Next contribution date
-                <input name="scheduledFor" type="date" />
-              </label>
-              <label>
-                Notes
-                <textarea name="notes" rows="3" placeholder="Share a pickup window or styling request"></textarea>
-              </label>
-              <button type="submit">Request to join</button>
-            </form>
-          </details>
+          <p class="muted">
+            Customers can still hand over savings physically to someone they know, while the
+            website makes records, support, and progress easier to access.
+          </p>
         </section>
 
-        <section class="timeline">
+        <section class="feature-section">
           <header>
-            <h2>The Ajo ritual</h2>
-            <p>How the thrift circle moves from contribution to celebration.</p>
+            <h2>What customers can do on the website</h2>
+            <p>Just the useful parts customers need after the representative has already explained the service.</p>
           </header>
-          <div class="timeline-grid">
-            <% timeline.forEach((step) => { %>
-              <article>
-                <h3><%= step.title %></h3>
-                <p><%= step.copy %></p>
+          <div class="feature-grid">
+            <% highlights.forEach((highlight) => { %>
+              <article class="feature-card">
+                <h3><%= highlight.title %></h3>
+                <p><%= highlight.copy %></p>
               </article>
             <% }) %>
           </div>
         </section>
 
+        <section class="access-grid" aria-label="Account access">
+          <article class="access-card">
+            <p class="label">New customer</p>
+            <h2>Create an account</h2>
+            <p class="muted">A representative can help open your account so you can choose your savings plan after sign up.</p>
+            <a class="btn primary" href="/auth/signup?next=%2Faccount">Sign up</a>
+          </article>
+
+          <article class="access-card">
+            <p class="label">Existing customer</p>
+            <h2>Log in to your account</h2>
+            <p class="muted">Return to see your savings plans, collection schedule, and support details.</p>
+            <a class="btn ghost" href="/auth/login?next=%2Faccount">Log in</a>
+          </article>
+
+          <article class="access-card">
+            <p class="label">Need help</p>
+            <h2>Support and policies</h2>
+            <p class="muted">Find contact help, privacy information, and basic website terms in one place.</p>
+            <div class="link-row">
+              <a class="admin-link" href="/support">Support</a>
+              <a class="admin-link" href="/privacy">Privacy</a>
+              <a class="admin-link" href="/terms">Terms</a>
+            </div>
+          </article>
+        </section>
+
         <section class="faq">
           <header>
-            <h2>FAQ</h2>
-            <p>Quick answers members usually ask before joining.</p>
+            <h2>Frequently asked questions</h2>
+            <p>Answers customers may need when the representative is not around.</p>
           </header>
           <div class="faq-grid">
-            <details>
-              <summary>How long is a cycle?</summary>
-              <p class="muted">Each plan runs for 10 months. You contribute monthly and receive your payout at the end of the cycle.</p>
-            </details>
-            <details>
-              <summary>How do I get confirmed?</summary>
-              <p class="muted">After you apply, the admin team reviews your details and confirms your next contribution and pickup window via WhatsApp.</p>
-            </details>
-            <details>
-              <summary>Can I change my plan later?</summary>
-              <p class="muted">Yes. Apply again with your new plan and include a note, or message support so we can update your record.</p>
-            </details>
-            <details>
-              <summary>Where do you deliver?</summary>
-              <p class="muted">We coordinate pickup and delivery across Lagos (Island + Mainland) with scheduled windows.</p>
-            </details>
+            <% faqs.forEach((faq) => { %>
+              <details>
+                <summary><%= faq.question %></summary>
+                <p class="muted"><%= faq.answer %></p>
+              </details>
+            <% }) %>
           </div>
         </section>
       </main>
@@ -247,8 +113,8 @@
       <footer class="site-footer" aria-label="Footer">
         <div class="footer-grid">
           <div>
-            <p class="eyebrow">Ajo Thrift Collective</p>
-            <p class="muted">Rotational contributions for curated thrift drops, styling support, and community wins.</p>
+            <p class="eyebrow">Ajo Thrift Collection</p>
+            <p class="muted">Digital support for a trusted representative-led thrift savings process.</p>
           </div>
           <div>
             <p class="footer-title">Support</p>
@@ -256,78 +122,13 @@
             <p class="muted">Email: support@ajo.local</p>
           </div>
           <div>
-            <p class="footer-title">Coverage</p>
-            <p class="muted">Lagos Island • Mainland • Scheduled hubs</p>
-            <p class="muted">Pickup windows confirmed after approval</p>
+            <p class="footer-title">Website links</p>
+            <p class="muted"><a class="admin-link" href="/privacy">Privacy policy</a></p>
+            <p class="muted"><a class="admin-link" href="/terms">Terms of use</a></p>
           </div>
         </div>
-        <p class="muted footer-bottom">Built for real-world operations: approvals, scheduling, delivery updates, and admin control.</p>
+        <p class="muted footer-bottom">Built to reduce paper work while keeping the trusted physical collection model in place.</p>
       </footer>
-    </div>
-
-    <script>
-      window.__AJO_PLANS__ = <%- JSON.stringify(plans) %>;
-    </script>
-    <script src="/js/main.js" defer></script>
-
-    <div class="modal" id="apply-modal" aria-hidden="true">
-      <div class="modal-backdrop" data-close="true"></div>
-      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="apply-title" tabindex="-1">
-        <div class="modal-head">
-          <div>
-            <p class="eyebrow">Application</p>
-            <h2 id="apply-title">Apply to join Ajo</h2>
-            <p class="muted modal-subtitle">Pick a plan and submit your details. Admin will confirm via WhatsApp.</p>
-          </div>
-          <button class="modal-close" type="button" data-close="true" aria-label="Close">X</button>
-        </div>
-
-        <p id="apply-status" class="status-note" aria-live="polite"></p>
-
-        <form id="apply-form" class="collection-form">
-          <label>
-            Full name
-            <input name="memberName" placeholder="Sade Amaka" value="<%= user ? user.name : "" %>" required />
-          </label>
-          <label>
-            Phone number
-            <input name="phone" type="tel" placeholder="+234 801 234 5678" required />
-          </label>
-          <label>
-            Email (optional)
-            <input name="memberEmail" type="email" placeholder="you@example.com" value="<%= user ? user.email : "" %>" />
-          </label>
-          <label>
-            Ajo plan
-            <select name="plan" required>
-              <% plans.forEach((plan) => { %>
-                <option value="<%= plan.name %>"><%= plan.name %></option>
-              <% }); %>
-            </select>
-          </label>
-          <label>
-            Monthly contribution (₦)
-            <input name="contribution" type="number" min="1" required />
-          </label>
-          <label>
-            Next contribution date
-            <input name="scheduledFor" type="date" />
-          </label>
-          <label>
-            Notes
-            <textarea name="notes" rows="3" placeholder="Pickup window, location, or styling request"></textarea>
-          </label>
-          <button type="submit">Submit application</button>
-        </form>
-
-        <p class="muted modal-footer">
-          <% if (!user) { %>
-            Tip: <a class="admin-link" href="/auth/login?next=/">Log in</a> to track requests on your account page.
-          <% } else { %>
-            View updates on <a class="admin-link" href="/account">My Ajo</a>.
-          <% } %>
-        </p>
-      </div>
     </div>
   </body>
 </html>

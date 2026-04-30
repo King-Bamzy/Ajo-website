@@ -14,7 +14,6 @@ function normalizeEmail(email) {
 }
 
 function randomToken() {
-  // base64url token (Node 16+ supports "base64url", but keep compatibility).
   return crypto.randomBytes(32).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
@@ -40,14 +39,14 @@ async function createSession(res, req, userId) {
 
 router.get("/login", (req, res) => {
   res.render("auth/login", {
-    next: req.query.next || "/",
+    next: req.query.next || "/account",
     error: null
   });
 });
 
 router.get("/signup", (req, res) => {
   res.render("auth/signup", {
-    next: req.query.next || "/",
+    next: req.query.next || "/account",
     error: null
   });
 });
@@ -65,7 +64,7 @@ router.post("/logout", async (req, res, next) => {
 });
 
 router.post("/signup", async (req, res, next) => {
-  const nextUrl = req.body.next || "/";
+  const nextUrl = req.body.next || "/account";
   const name = String(req.body.name || "").trim();
   const email = normalizeEmail(req.body.email);
   const password = String(req.body.password || "");
@@ -91,7 +90,7 @@ router.post("/signup", async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const nextUrl = req.body.next || "/";
+  const nextUrl = req.body.next || "/account";
   const email = normalizeEmail(req.body.email);
   const password = String(req.body.password || "");
 
@@ -111,4 +110,3 @@ router.post("/login", async (req, res, next) => {
 });
 
 module.exports = router;
-
